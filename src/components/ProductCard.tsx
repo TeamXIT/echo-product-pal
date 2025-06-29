@@ -4,6 +4,7 @@ import { Star, ShoppingCart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Product } from '@/types/types';
+import { useNavigate } from 'react-router-dom';
 
 interface ProductCardProps {
   product: Product;
@@ -16,10 +17,24 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   onAddToCart,
   isRecommended = false
 }) => {
+  const navigate = useNavigate();
+
+  const handleCardClick = () => {
+    navigate(`/product/${product.id}`);
+  };
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent card click when clicking add to cart
+    onAddToCart(product.id);
+  };
+
   return (
-    <Card className={`group hover:shadow-xl transition-all duration-300 hover:-translate-y-2 ${
-      isRecommended ? 'ring-2 ring-orange-200' : ''
-    }`}>
+    <Card 
+      className={`group hover:shadow-xl transition-all duration-300 hover:-translate-y-2 cursor-pointer ${
+        isRecommended ? 'ring-2 ring-orange-200' : ''
+      }`}
+      onClick={handleCardClick}
+    >
       <CardContent className="p-0">
         <div className="relative overflow-hidden rounded-t-lg">
           <img
@@ -67,7 +82,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             </span>
             
             <Button
-              onClick={() => onAddToCart(product.id)}
+              onClick={handleAddToCart}
               size="sm"
               className="bg-gradient-to-r from-orange-500 to-rose-500 hover:from-orange-600 hover:to-rose-600 text-white transform hover:scale-105 transition-all duration-200"
             >
